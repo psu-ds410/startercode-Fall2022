@@ -1,0 +1,6 @@
+import retail.csv
+
+for Country in retail.csv:
+  x = unit_price * quantity;
+  return x;
+  

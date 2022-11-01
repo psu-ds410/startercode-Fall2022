@@ -1,0 +1,5 @@
+import flight.csv
+
+for City in flight.csv:
+  passengers_in, passengers_out = line.split('\t')
+print '{0}\t{1}'.format(City, passenger_in, passenger_out)
