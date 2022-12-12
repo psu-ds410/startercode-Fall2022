@@ -9,24 +9,17 @@ val session = SparkSession.builder().getOrCreate()
 
 object DFlab {
     
-    def getFB(sc: SparkContext): df.map[Array[String]] = {
-       sc.textFile("/datasets/facebook").map{x => x.trim()}.map{x => x.split(" ")}
-    }
-
-    def getFBTuples(sc: SparkContext): df.map[(String, String)] = {
-        getFB(sc).map{x => (x(0), x(1))}
-        
-   }
-    //val dfFromRDD1 = rdd.toDF()
-    //dfFromRDD1.printSchema()
+    val triangles = numTriangles(test_df)
+    saveIt(triangles, "FacebookTriangles")
    }
     def getTestDataFrame(spark) = {
       List((1,2,3), (4,5,6)).toDF("a", "b", "c")
    }
     
-    val data_location = ("/datasets/facebook")
-    val df = spark.read.format("csv").load(data_location)
-    df.printSchema
+    def getSC() = {
+        val conf = new SparkConf().setAppName("q1")
+        val sc = new SparkContext(conf)
+        sc
 
    }
     import org.apache.spark.sql.types._
@@ -37,18 +30,22 @@ object DFlab {
     df2.show()
 
    }
-    def numTriangles(graph: df.map[(String, String)]) = {
-        val flipped = graph.map{case (a, b) => (b, a)}
-        val combined = graph.union(flipped).distinct()
-        val selfjoin = combined.join(combined)       
-        val cleaned = selfjoin.filter{case (mid, (start, end)) => start != end}
-        val flipped_clean = cleaned.map{case (a, b) => (b,a)}
-        val hacked_combined = combined.map{x => (x, 1)}
+    def numTriangles(sc: SparkContext, df: DataFrame) = {
+        val df_test = df
+        val df_facebook = getDataFrame()
+        
+        val flipped = df_facebook.select("Col2", "Col1")
+        val combined = df_facebook.union(flipped).distinct()
+        
+        val df_facebook2 = df_facebook.withColumnRenamed("Col1"), "newCol1")
+        val selfjoin = df_facebook.join(df_facebook2, df_facebook.col("Col1") == df_facebook2.col("newCol1"))
+        
+        val cleaned = selfjoin.where((col("Col2".getItem(0) =!= col("Col2".getItem(1))
+                                         
+        val flipped_clean = cleaned.select("Col2", "Col1")
+        val hacked_combined = combined.select("Col2").distinct().count()
         val all_joined = flipped_clean.join(hacked_combined)
-        all_joined.count() / 6
+        val all_joined.select(count("*")) / 6                                  
     }  
     
-    //saving file 
-    df.write.format("parquet").save("hdfs://datasets/facebook/FacebookTriangles")
-    }
 }
