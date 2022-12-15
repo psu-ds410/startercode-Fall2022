@@ -3,36 +3,76 @@ case class Neumaier(sum: Double, c: Double)
 object HW {
 
    def q1_countsorted(x: Int, y: Int, z:Int) = {
-      //the types of the input parameters have been declared.
-      //you must do the same for the output type (see scala slides)
-      //do not use return statements.
-      -1
+      i = 0
+      val a = if x < y{
+          i++
+          }
+      else if y < z{
+          i++
+          }
+      else if x < z{
+          i++
+          }
    }
+
 
    def q2_interpolation(name: String, age: Int) = {
-      //the types of the input parameters have been declared.
-      //you must do the same for the output type (see scala slides)
-      //do not use return statements.
-      ""
+      if age <= 21{
+         print("Hello", name)
+      }
+      else if age > 21{
+         print("Howdy", name)
+      }
    }
 
-   def q3_polynomial(arr: Seq[Double]) = {
-      //the types of the input parameters have been declared.
-      //you must do the same for the output type (see scala slides)
-      //do not use return statements.
-      0.0
+
+   def q3_polynomial(arr: Seq[Double]): Double = {
+      arr.foldLeft(0.0)((acc, x) => acc + x * (acc + 1))
    }
 
+   
    def q4_application(x: Int, y: Int, z: Int)(f: (Int, Int) => Int) = {
-      //the types of the input parameters have been declared.
-      //you must do the same for the output type (see scala slides)
-      //do not use return statements.
+
       1
    }
 
-   // create the rest of the functions yourself
-   // in order for the code to compile, you need to (at the very least) create
-   // blank versions of the remaining functions and have them return a value of 
-   // the expected type, like the blank functions above.
-   // remember, to compile, you don't specify any file names, you just use sbt compile
+
+   def q5_stringy(start: Int, n: Int): Vector[String] = {
+      for (i <- 0 until n) yield (start + i).toString
+          Vector.tabulate(n)(i => (start + i).toString)
+   }
+
+
+   def q6_modab(a: Int, b: Int, c: Seq[Int]) = Seq[Int]{
+      val result = c.filter(_ < a)
+      val result2 = result.filter(b % _ != 0)
+      result2
+   }
+
+
+   def q7_count(arr: Vector[Int])(f: (Int, Int) => Boolean) = {
+      if f(arr.head == true) 
+      {1 + q7_count(arr.tail, f())}
+   }
+
+
+   def q8_count_tail(){
+
+   }
+
+   def q9_neumaier(){
+function NeumaierSum(input)
+    var sum = 0.0
+   var c = 0.0
+   for i = 1 to input.length do
+       var t = sum + input[i]
+       if |sum| >= |input[i]| then
+           c += (sum - t) + input[i]
+      else
+          c += (input[i] - t) + sum 
+      endif
+      sum = t
+   return sum + c
+   }
+
 }
