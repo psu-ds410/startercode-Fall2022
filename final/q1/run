@@ -1,0 +1,1 @@
+mrjob run final/q1/fbcount.py -r hadoop /datasets/facebook
