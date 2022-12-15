@@ -1,13 +1,23 @@
-import org.apache.spark.rdd.RDD
+import org.apache.spark.SparkConf
 
-val rdd: RDD[String] = spark.sparkContext.textFile("/datasets/facebook")
+object fbcountrdd{
+  def main(args: Array[String]) {
+    val conf = new
+SparkConf().setAppname("fbcountrdd")
+    val sc = new SparkContext(conf)
 
-val fbcountrdd = rdd
-  .map(_.split(" "))
-  .filter(line => line(1).toInt > 500)
-  .map(line => (line(0), 1))
-  .reduceByKey(_ + _)
-  .filter(_._2 > 2)
-  .mapValues(_ +1)
+    val input =
+sc.textFile("/datasets/facebook")
+    val pairs = input.map(line =>
+line.split(" ")).filter(pair =>
+pair(1).toInt > 500)
+    val counts = pairs.map(pair =>
+(pair(0), 1)).reduceByKey((a, b) =>
+a + b)
+    val output = counts.filter(pair
+=> pair._2 > 2).map(pair =>
+(pair._1, pair._2 + 1))
 
-fbcountrdd.saveAsTextFile("fbcount_rdd")
+output.saveAsTextFile("fbcountrdd")
+    }
+}
